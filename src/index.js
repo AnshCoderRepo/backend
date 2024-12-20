@@ -7,7 +7,16 @@ dotenv.config({
      path: './env' // where the.env file is located
  })
 connetDB()
-
+    .then(() => {
+        app.listen(process.env.PORT || 8000, () => {
+            console.log(`server is running at ${process.env.PORT}`);
+            
+        })
+    })
+    .catch((error)=> {
+    console.log("MongoDB Connection fail",error);
+    
+})
 
 
 
