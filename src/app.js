@@ -6,7 +6,7 @@ import cookieParser from 'cookie-parser';
 const app = express();
 
 app.use(cors({
-    origin: proxess.env.CORS_ORIGIN,
+    origin: process.env.CORS_ORIGIN,
     credentials: true
 }));
 //accepting json file- filling form
@@ -22,4 +22,13 @@ app.use(express.static("public"))
 // cookie parser to perform  CRUD operations on cookies
 
 app.use(cookieParser());
+
+// routes import 
+import userRouter from './routes/user.routes.js';
+
+// routes declaration
+app.use("/api/v1/users", userRouter);
+
+
+
 export {app}

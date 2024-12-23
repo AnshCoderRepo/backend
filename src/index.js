@@ -1,6 +1,10 @@
 // require('dotenv').config({path:'./env'})
 // Importing required modules
+import express from 'express';
 
+
+import { app } from "./app.js";
+//const app = express();
 import dotenv from "dotenv"
 import connetDB from "./db/index.js";
 dotenv.config({
