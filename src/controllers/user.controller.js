@@ -17,13 +17,13 @@ const registerUser = asyncHandler(async (req, res) => {
     
     const { fullName, username, email, password } = req.body
     if ([fullName, username, email, password].some((field) => 
-        field?.trim() == "")
+        field?.trim() === "")
     ) {
         throw new ApiError(400, 'All fields are required') 
     }
     // find user name matching email
-    const existedUser = User.findOne({ 
-        $or: [{ email }, { username }]
+    const existedUser = await User.findOne({ 
+        $or: [{ username }, { email }]
     })
     if (existedUser) {
         throw new ApiError(400, 'User already exists')
@@ -32,12 +32,14 @@ const registerUser = asyncHandler(async (req, res) => {
     // req.files may contain the uploaded files, and "avatar" is the key used to upload the file.
     // The optional chaining (?.) ensures the code doesn't throw an error if "files" or "avatar" is undefined.
     // [0]?.path retrieves the path of the first file in case multiple files were uploaded.
-    const avatarLocalPath = req.files?.avatar[0]?.path
+    const avatarLocalPath = req.files?.avatar?.[0]?.path;
     
-    const coverImageLocalPath = req.files?.coverImage[0]?.path
-
-    if (avatarLocalPath) {
-        throw new ApiError(400, "Avatar  file is required")
+    let coverImageLocalPath;
+    if (req.files && Array.isArray(req.files.coverImage) && req.files.coverImage.length > 0) {
+        coverImageLocalPath = req.files.coverImage[0].path
+    }
+    if (!avatarLocalPath) {
+        throw new ApiError(400, "Avatar file is required")
     }
 
     // upload avatar on cloudinary server
@@ -56,7 +58,7 @@ const registerUser = asyncHandler(async (req, res) => {
         username: username.toLowerCase(),
         email,
         password,
-        avatar: avatar.url,
+        avatar: avatar.url ,
         coverImage: coverImage?.url || ""
     })
     // remove password and refresh token from response

@@ -8,7 +8,7 @@ import { app } from "./app.js";
 import dotenv from "dotenv"
 import connetDB from "./db/index.js";
 dotenv.config({
-     path: './env' // where the.env file is located
+     path: './.env' // where the.env file is located
  })
 connetDB()
     .then(() => {
